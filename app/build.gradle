@@ -1,0 +1,53 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'bin.mt.test'
+    compileSdk 32
+    ndkVersion '24.0.8215888'
+
+    defaultConfig {
+        applicationId "bin.mt.signature"
+        minSdk 21
+        //noinspection OldTargetApi
+        targetSdk 32
+        versionCode 1
+        versionName "1.0"
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+                abiFilters = ["armeabi-v7a", "x86", "arm64-v8a", "x86_64"]
+            }
+        }
+        ndk {
+            abiFilters = ["armeabi-v7a", "x86", "arm64-v8a", "x86_64"]
+        }
+    }
+
+    signingConfigs {
+        debug {
+            storeFile file("../fake.jks")
+            storePassword "123456"
+            keyAlias "key0"
+            keyPassword "123456"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation project(path: ':killer')
+}
