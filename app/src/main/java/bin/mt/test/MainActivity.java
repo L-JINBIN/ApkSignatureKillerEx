@@ -28,10 +28,8 @@ import java.util.zip.ZipInputStream;
 public class MainActivity extends Activity {
 
     public static class App extends Application {
-        @Override
-        protected void attachBaseContext(Context base) {
+        static {
             new bin.mt.signature.KillerApplication(); // 注释掉这句即可关闭过签
-            super.attachBaseContext(base);
         }
     }
 
