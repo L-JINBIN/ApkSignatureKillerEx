@@ -2,6 +2,7 @@ package bin.mt.signature;
 
 import android.app.Application;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
 import android.os.Parcel;
@@ -78,7 +79,13 @@ public class KillerApplication extends Application {
             throw new RuntimeException(e);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            HiddenApiBypass.addHiddenApiExemptions("Landroid/os/Parcel;");
+            HiddenApiBypass.addHiddenApiExemptions("Landroid/os/Parcel;", "Landroid/content/pm", "Landroid/app");
+        }
+        try {
+            Object cache = findField(PackageManager.class, "sPackageInfoCache").get(null);
+            //noinspection ConstantConditions
+            cache.getClass().getMethod("clear").invoke(cache);
+        } catch (Throwable ignored) {
         }
         try {
             Map<?, ?> mCreators = (Map<?, ?>) findField(Parcel.class, "mCreators").get(null);
