@@ -136,7 +136,7 @@ public class KillerApplication extends Application {
             return;
         }
         File apkFile = new File(apkPath);
-        File repFile = new File("/data/data/" + packageName + "/origin.apk");
+        File repFile = new File(Environment.getDataDirectory().getPath() + packageName + "/origin.apk");
         try (ZipFile zipFile = new ZipFile(apkFile)) {
             String name = "assets/SignatureKiller/origin.apk";
             ZipEntry entry = zipFile.getEntry(name);
