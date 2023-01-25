@@ -1,10 +1,12 @@
 package bin.mt.signature;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Base64;
@@ -136,7 +138,7 @@ public class KillerApplication extends Application {
             return;
         }
         File apkFile = new File(apkPath);
-        File repFile = new File("/data/data/" + packageName + "/origin.apk");
+        File repFile = new File(getDataFile(packageName), "origin.apk");
         try (ZipFile zipFile = new ZipFile(apkFile)) {
             String name = "assets/SignatureKiller/origin.apk";
             ZipEntry entry = zipFile.getEntry(name);
@@ -157,6 +159,18 @@ public class KillerApplication extends Application {
             throw new RuntimeException(e);
         }
         hookApkPath(apkFile.getAbsolutePath(), repFile.getAbsolutePath());
+    }
+
+    @SuppressLint("SdCardPath")
+    private static File getDataFile(String packageName) {
+        String username = Environment.getExternalStorageDirectory().getName();
+        if (username.matches("\\d+")) {
+            File file = new File("/data/user/" + username + "/" + packageName);
+            if (file.canWrite()) {
+                return file;
+            }
+        }
+        return new File("/data/data/" + packageName);
     }
 
     private static String getApkPath(String packageName) {
